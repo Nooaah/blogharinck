@@ -95,17 +95,19 @@ else
         </button>
       </div>
       <div class="modal-body mx-3">
-        <i>Compte de Noah : noah.chtl@gmail.com & 123</i>
+      <i>Compte de Noah : noah.chtl@gmail.com & 123</i>
+        <br>
+        <i>Compte de Test : sebastien.harinck@domaine.com & 123</i>
         <div class="md-form mb-5">
           <i class="fas fa-envelope prefix grey-text"></i>
           <input id="mail" name="mail" type="email" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
+          <label for="mail" data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
         </div>
 
         <div class="md-form mb-4">
           <i class="fas fa-lock prefix grey-text"></i>
           <input id="password" name="password" type="password" id="defaultForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
+          <label for="password" data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
         </div>
 
       </div>
@@ -130,7 +132,7 @@ else
 <nav class="navbar navbar-expand-lg navbar-dark elegant-color">
 
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyPenguy</a>
+  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyHarinck</a>
 
   <!-- Collapse button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -156,9 +158,13 @@ else
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="index.php">Toutes les catégories</a>
-          <a class="dropdown-item" href="index.php?cat=1">TECH</a>
-          <a class="dropdown-item" href="index.php?cat=2">MOBILE</a>
+            <a class="dropdown-item" href="index.php">Toutes les catégories</a>
+        <?php
+        $categories = get_all_categories();
+        foreach($categories as $categorie):
+        ?>
+           <a class="dropdown-item" href="index.php?cat=<?= $categorie['id'] ?>"><?= $categorie['name'] ?></a>
+        <?php endforeach; ?>
         </div>
       </li>
 
@@ -244,7 +250,7 @@ else
 
             <div class="col-md-8">
                     <p style="font-size:19px;" class="mt-2">
-                        <div class="date" style="font-size:13px;"><b><b><?= retrieve_categorie_by_id($post['categorie']) ?> / </b></b>Il y à 1 heure</div>
+                        <div class="date" style="font-size:13px;"><b><b><?= retrieve_categorie_by_id($post['categorie']) ?> / </b></b>Le <?= date('d/m/Y à H:m', $post['date']); ?></div>
                         <h2 class="mb-3"><a style="color:black;" href="article.php?id=<?= $post['id'] ?>"><b><b><?= $post['title'] ?></b></b></a></h2>
                         <?php
                         $text = $post['content'];

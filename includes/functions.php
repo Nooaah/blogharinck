@@ -7,11 +7,11 @@ function get_all_posts()
     return $sth->fetchAll();
 }
 //CRUD posts
-function create_post($id_user, $title, $content, $image)
+function create_post($id_user, $title, $content, $image, $categorie)
 {
     global $db;
-    $ins = $db->prepare('INSERT INTO posts(id_user, title, content, image) VALUES(?, ?, ?, ?)');
-    $ins->execute(array($id_user, $title, $content, $image));
+    $ins = $db->prepare('INSERT INTO posts(id_user, title, content, image, categorie, date) VALUES(?, ?, ?, ?, ?, ?)');
+    $ins->execute(array($id_user, $title, $content, $image, $categorie, time()));
 }
 function retrieve_post($id)
 {
@@ -20,11 +20,11 @@ function retrieve_post($id)
     $get->execute(array($id));
     return $get->fetch();
 }
-function update_post($id, $title, $content)
+function update_post($id, $title, $content, $categorie)
 {
     global $db;
-    $up = $db->prepare('UPDATE posts SET title = ?, content = ? WHERE id = ?');
-    $up->execute(array($title, $content, $id));
+    $up = $db->prepare('UPDATE posts SET title = ?, content = ?, categorie = ? WHERE id = ?');
+    $up->execute(array($title, $content, $categorie, $id));
 }
 function delete_post($id)
 {
@@ -46,8 +46,33 @@ function get_posts_by_user($id)
     $getByCat->execute(array($id));
     return $getByCat->fetchAll();
 }
-
+function add_view($id)
+{
+    global $db;
+    $up = $db->prepare('UPDATE posts SET views = views + 1 WHERE id = ?');
+    $up->execute(array($id));
+}
+function get_most_famous_posts()
+{
+    global $db;
+    $getFamousPost = $db->prepare('SELECT * FROM posts ORDER BY views DESC LIMIT 3');
+    $getFamousPost->execute();
+    return $getFamousPost->fetchAll();
+}
+function get_new_posts()
+{
+    global $db;
+    $getNewPosts = $db->prepare('SELECT * FROM posts ORDER BY id DESC LIMIT 3');
+    $getNewPosts->execute();
+    return $getNewPosts->fetchAll();
+}
 //CRUD categories
+function get_all_categories()
+{
+    global $db;
+    $sth = $db->query("SELECT * FROM categories ORDER BY id");
+    return $sth->fetchAll();
+}
 function get_categorie_id_by_name($name)
 {
     global $db;

@@ -26,8 +26,9 @@ if (isset($_POST['sendPost']))
         if (!empty($_POST['content']))
         {
             $title = htmlspecialchars($_POST['title']);
-            $content = htmlspecialchars($_POST['content']);
-            update_post($getid, $title, $content);
+            $content = nl2br($_POST['content']);
+            $categorie = intval($_POST['categorie']);
+            update_post($getid, $title, $content, $categorie);
             header('location:index.php');
         }
         else
@@ -87,7 +88,7 @@ if (isset($_POST['sendPost']))
 <nav class="navbar navbar-expand-lg navbar-dark elegant-color">
 
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyPenguy</a>
+  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyHarinck</a>
 
   <!-- Collapse button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -107,14 +108,22 @@ if (isset($_POST['sendPost']))
       <li class="nav-item">
         <a class="nav-link" target="_blank" href="http://github.com/Nooaah"><i class="fab fa-github mr-2"></i>Nooaah</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="ajouter.php"><i class="fas fa-plus-circle mr-2"></i>Ajouter</a>
+        </li>
 
       <!-- Dropdown -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="index.php?cat=1">TECH</a>
-          <a class="dropdown-item" href="index.php?cat=2">MOBILE</a>
+        <a class="dropdown-item" href="index.php">Toutes les catégories</a>
+        <?php
+        $categories = get_all_categories();
+        foreach($categories as $categorie):
+        ?>
+           <a class="dropdown-item" href="index.php?cat=<?= $categorie['id'] ?>"><?= $categorie['name'] ?></a>
+        <?php endforeach; ?>
         </div>
       </li>
 
@@ -165,15 +174,37 @@ if (isset($_SESSION['id'])) {
 ?>
             <h1 class="mt-5">Modifier l'article <?= $post['title'] ?></h1>
 
-            <!-- Material input -->
-            <div class="md-form">
-            <input type="text" id="form1" name="title" class="form-control" value="<?= $post['title'] ?>">
-            <label for="form1">Votre titre</label>
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Material input -->
+                    <div class="md-form">
+                    <input type="text" id="form1" name="title" class="form-control" value="<?= $post['title'] ?>">
+                    <label for="form1">Votre titre</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <select id="categorie" name="categorie" class="browser-default custom-select mt-4">
+                        <?php
+                            foreach (get_all_categories() as $categorie):
+                        ?>
+                            <option value="<?= get_categorie_id_by_name($categorie['name']) ?>"><?= $categorie['name'] ?></option>
+                        <?php
+                            endforeach;
+                        ?>
+                    </select>
+                </div>
             </div>
+
+
+
 
             <!--Material textarea-->
             <div class="md-form">
-                <textarea id="form7" class="md-textarea form-control" name="content" rows="10"><?= $post['content'] ?></textarea>
+                <textarea id="form7" class="md-textarea form-control" name="content" rows="10"><?php
+                $text = str_replace("<br />", "", $post['content']);
+                $text = str_replace("<br>", "", $text);
+                echo $text;
+                ?></textarea>
                 <label for="form7">Votre post</label>
             </div>
 

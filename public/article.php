@@ -6,6 +6,7 @@ if (isset($_GET['id']))
 {
     $getid = intval($_GET['id']);
     $post = retrieve_post($getid);
+    add_view($getid);
 }
 else
 {
@@ -90,16 +91,18 @@ if (isset($_POST['login'])) {
       </div>
       <div class="modal-body mx-3">
         <i>Compte de Noah : noah.chtl@gmail.com & 123</i>
+        <br>
+        <i>Compte de Test : sebastien.harinck@domaine.com & 123</i>
         <div class="md-form mb-5">
           <i class="fas fa-envelope prefix grey-text"></i>
           <input id="mail" name="mail" type="email" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
+          <label for="mail" data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
         </div>
 
         <div class="md-form mb-4">
           <i class="fas fa-lock prefix grey-text"></i>
           <input id="password" name="password" type="password" id="defaultForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
+          <label for="password" data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
         </div>
 
       </div>
@@ -124,7 +127,7 @@ if (isset($_POST['login'])) {
 <nav class="navbar navbar-expand-lg navbar-dark elegant-color">
 
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyPenguy</a>
+  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyHarinck</a>
 
   <!-- Collapse button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -151,8 +154,12 @@ if (isset($_POST['login'])) {
           aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="index.php">Toutes les catégories</a>
-          <a class="dropdown-item" href="index.php?cat=1">TECH</a>
-          <a class="dropdown-item" href="index.php?cat=2">MOBILE</a>
+          <?php
+        $categories = get_all_categories();
+        foreach($categories as $categorie):
+        ?>
+           <a class="dropdown-item" href="index.php?cat=<?= $categorie['id'] ?>"><?= $categorie['name'] ?></a>
+        <?php endforeach; ?>
         </div>
       </li>
 
@@ -204,49 +211,116 @@ if (isset($_POST['login'])) {
 
 
 
-    <div class="container">
-        <h1 class="mt-5"><b><b><?= $post['title'] ?></b></b></h1>
+    <div class="container mt-5">
+        <span style="background-color:#F9D848;border-radius:5px;padding:5px 10px;color:white;font-weight:bold;text-align:center;">
+        <a class="white-text" href="index.php?cat=<?= $post['categorie'] ?>"><?= retrieve_categorie_by_id($post['categorie']) ?></a>
+        </span>
+        <h1 class="mt-4"><b><b><?= $post['title'] ?></b></b></h1>
         <div class="row">
-            <div class="col-md-1 mt-2">
+            <div class="col-md-0 mt-2">
                 <a href="profil.php?id=<?= $post['id_user'] ?>">
-                    <img src="https://vignette.wikia.nocookie.net/nintendo/images/7/75/Mario.png/revision/latest?cb=20150913114044&path-prefix=tr" width="50px" style="border-radius:100%;" alt="">
+                    <img src="<?= get_user_pseudo_by_id($post['id_user'])[4] ?>" width="50px" style="border-radius:100%;" alt="">
                 </a>
             </div>
             <div class="col-md-11" style="color:#BDBDBD;font-size:14px;">
-                <b><b><?= 'Ajouté le 09/10/2019 à 16h'  ?></b></b>
+                <b><b><?= 'Ajouté le ' . date('d/m/Y à H:m', $post['date']); ?></b></b>
                 <br>
-                Par <span style="color:black;"><a style="color:black;" href="profil.php?id=<?= $post['id_user'] ?>"><b><b><?= get_user_pseudo_by_id(1)[1] ?></b></b></a></span>
-
+                Par <span style="color:black;"><a style="color:black;" href="profil.php?id=<?= $post['id_user'] ?>"><b><b><?= get_user_pseudo_by_id($post['id_user'])[1] ?></b></b></a></span>
+                <br>
+                <b>Cet article à été vu <b><?= $post['views'] + 1 ?> fois</b>
             </div>
         </div>
         <hr>
         <div class="row">
-            <div class="col-md-1">
-                <a target="_blank" href="http://facebook.com"><img class="mt-4" style="border-radius:100%;" src="https://image.flaticon.com/icons/png/512/124/124010.png" width="35px" alt=""></a>
-                <a target="_blank" href="http://twitter.com"><img class="mt-3" style="border-radius:35px;" src="https://dragonsniortais.fr/wp-content/uploads/2019/04/logo-twitter-circle-png-transparent-image-1.png" width="35px" alt=""></a>
-                <a target="_blank" href="http://Pinterest.com"><img class="mt-3" style="border-radius:35px;" src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c52e.png" width="35px" alt=""></a>
-                <a target="_blank" href="mailto:noah.chtl@gmail.com"><img class="mt-3" style="border-radius:10%;margin-left:2px;" src="http://lcdgg.thomascyrix.com/wp-content/uploads/2019/04/Gmail_Icon.png" width="35px" alt=""></a>
-        
-            </div>
+
             <div class="col-md-8">
                 <img class="mb-4" src="<?= $post['image'] ?>" width="100%">
                 
-                <p style="font-size:19px;">
-                    <?= $post['content'] ?>
-                </p>
+                <div class="row">
+                    <div class="col-md-1">
+                        <!-- <a target="_blank" href="https://www.facebook.com/sharer.php?u=article.php?id=<?= $post['id'] ?>"><img class="mt-4" style="border-radius:100%;" src="https://image.flaticon.com/icons/png/512/124/124010.png" width="35px" alt=""></a> -->
+                        <a target="_blank" href="https://www.facebook.com/sharer.php?u=http://noah-chatelain.fr/bloggy/article.php?id=28"><img class="mt-4" style="border-radius:100%;" src="https://image.flaticon.com/icons/png/512/124/124010.png" width="35px" alt=""></a>
+                        <a target="_blank" href="https://twitter.com/intent/tweet?text=<?= $post['title'] ?>&url=http://noah-chatelain.fr/bloggy/article.php?id=28"><img class="mt-3" style="border-radius:35px;" src="https://dragonsniortais.fr/wp-content/uploads/2019/04/logo-twitter-circle-png-transparent-image-1.png" width="35px" alt=""></a>
+                        <a target="_blank" href="http://Pinterest.com"><img class="mt-3" style="border-radius:35px;" src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c52e.png" width="35px" alt=""></a>
+                        <a target="_blank" href="mailto:noah.chtl@gmail.com"><img class="mt-3" style="border-radius:10%;margin-left:2px;" src="http://lcdgg.thomascyrix.com/wp-content/uploads/2019/04/Gmail_Icon.png" width="35px" alt=""></a>
+        
+                    </div>
+                    <div class="col-md-11">
+                        <p style="font-size:19px;">
+                            <?= $post['content'] ?>
+                        </p>
+                    
+                    </div>
+                </div>
             
                 <?php
                 if (!empty($_SESSION['id']) && $_SESSION['id'] == $post['id_user'])
                 {
                     ?>
-                        <a title="Modifier" style="padding:10px 15px;" href="modifier.php?id=<?= $post['id'] ?>" class="btn btn-success text-white"><i class="far fa-edit mr-2"></i>Modifier</a>
+                        <a title="Modifier" style="padding:10px 15px;" href="modifier.php?id=<?= $post['id'] ?>" class="btn btn-success text-white mt-5"><i class="far fa-edit mr-2"></i>Modifier</a>
                         
-                        <a data-toggle="modal" style="padding:10px 15px;" data-value="<?= $post['id'] ?>" class="btnDelete btn btn-danger" data-target="#centralModalDanger"><i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
+                        <a data-toggle="modal" style="padding:10px 15px;" data-value="<?= $post['id'] ?>" class="btnDelete btn btn-danger mt-5" data-target="#centralModalDanger"><i class="fas fa-trash-alt mr-2"></i>Supprimer</a>
                     <?php
                 }
                 
                 ?>
             </div>
+
+
+
+
+
+
+
+                <div class="col-md-4" style="margin-top:-80px;">
+                        <div class="row">
+                            <div class="col-md-12 text-center mb-5" >
+                                <i><h5 style="font-size:20px;background-color:#555555;color:white;width:150px;margin:auto;margin-top:95px;"><b>Les plus vus</b></h5></i>
+                            <hr style="margin-top:-14px;">
+                            </div>
+                        <?php
+                            foreach(get_most_famous_posts() as $famousPost):
+                                ?>
+                                    <div class="row">
+                                        <div class="col-md-5 mb-3">
+                                            <a href="article.php?id=<?= $famousPost['id'] ?>"><img src="<?= $famousPost['image'] ?>" width="100%" alt=""></a>
+                                        </div>
+                                        <div class="col-md-7 mb-3 pl-0">
+                                            <a style="color:black;" class="articleMostView" href="article.php?id=<?= $famousPost['id'] ?>"><b><b><?= $famousPost['title'] ?></b></b></a>
+                                            <br>
+                                            <?= $famousPost['views'] ?> vues
+                                        </div>
+                                    </div>
+                                <?php
+                            endforeach;
+                            ?>
+                            <div class="col-md-12 text-center mb-5">
+                                <i><h5 style="font-size:20px;background-color:#555555;color:white;width:170px;margin:auto;margin-top:50px;"><b>Les nouveautés</b></h5></i>
+                                <hr style="margin-top:-14px;">
+                            
+                            </div>
+                        <?php
+                            foreach(get_new_posts() as $famousPost):
+                                ?>
+                                    <div class="row">
+                                        <div class="col-md-5 mb-3">
+                                            <a href="article.php?id=<?= $famousPost['id'] ?>"><img src="<?= $famousPost['image'] ?>" width="100%" alt=""></a>
+                                        </div>
+                                        <div class="col-md-7 mb-3 pl-0">
+                                            <a style="color:black;" class="articleMostView" href="article.php?id=<?= $famousPost['id'] ?>"><b><b><?= $famousPost['title'] ?></b></b></a>
+                                            <br>
+                                            <?= $famousPost['views'] ?> vues
+                                        </div>
+                                    </div>
+                                <?php
+                            endforeach;
+                        ?>
+                            
+
+                        </div>
+                </div>
+            </div>
+
 
 
 

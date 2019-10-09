@@ -25,7 +25,7 @@ else
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title><?= $_SESSION['pseudo'] ?> - BloggyPenguy</title>
+    <title><?= $_SESSION['pseudo'] ?> - BloggyHarinck</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -57,7 +57,7 @@ else
 <nav class="navbar navbar-expand-lg navbar-dark elegant-color">
 
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyPenguy</a>
+  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyHarinck</a>
 
   <!-- Collapse button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -84,8 +84,12 @@ else
           aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="index.php">Toutes les catégories</a>
-          <a class="dropdown-item" href="index.php?cat=1">TECH</a>
-          <a class="dropdown-item" href="index.php?cat=2">MOBILE</a>
+          <?php
+        $categories = get_all_categories();
+        foreach($categories as $categorie):
+        ?>
+           <a class="dropdown-item" href="index.php?cat=<?= $categorie['id'] ?>"><?= $categorie['name'] ?></a>
+        <?php endforeach; ?>
         </div>
       </li>
 
@@ -161,13 +165,13 @@ else
         <div class="md-form mb-5">
           <i class="fas fa-envelope prefix grey-text"></i>
           <input id="mail" name="mail" type="email" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
+          <label for="mail" data-error="wrong" data-success="right" for="defaultForm-email">Email</label>
         </div>
 
         <div class="md-form mb-4">
           <i class="fas fa-lock prefix grey-text"></i>
           <input id="password" name="password" type="password" id="defaultForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
+          <label for="password" data-error="wrong" data-success="right" for="defaultForm-pass">Mot de passe</label>
         </div>
 
       </div>
@@ -198,7 +202,7 @@ $userinfo = retrieve_user($getid);
 
             <div class="row">
                 <div class="col-md-3">
-                    <img src="https://vignette.wikia.nocookie.net/nintendo/images/7/75/Mario.png/revision/latest?cb=20150913114044&path-prefix=tr" width="100%" style="border-radius:100%;" class="mt-5" alt="">
+                    <img src="<?= $userinfo['image'] ?>" width="100%" style="border-radius:100%;" class="mt-5" alt="">
                     <h4 class="text-center mt-4"><?= $userinfo['pseudo'] ?></h4 class="text-center">
                     <p class="mt-2 text-center">
                         <a href="mailto:<?= $userinfo['mail'] ?>"><?= $userinfo['mail'] ?></a>

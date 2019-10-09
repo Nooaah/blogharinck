@@ -9,35 +9,23 @@ if (empty($_SESSION['id']))
 }
 
 
-if (isset($_POST['sendPost']))
+if (isset($_POST['submitPost']))
 {
-    if (!empty($_POST['title']))
+    if (!empty($_POST['titre']) && !empty($_POST['image']) && !empty($_POST['contenu']) && !empty($_POST['categorie']))
     {
-        if (!empty($_POST['content']))
-        {
-            if (!empty($_POST['image']))
-            {
-                $title = htmlspecialchars($_POST['title']);
-                $content = htmlspecialchars($_POST['content']);
-                $image = htmlspecialchars($_POST['image']);
-                create_post($_SESSION['id'], $title, $content, $image);
-                header('location:index.php');
-            }
-            else
-            {
-                $error = 'Veuillez compléter l\'image du post';
-            }
-        }
-        else
-        {
-            $error = 'Veuillez compléter le contenu du post';
-        }
+        $titre = htmlspecialchars($_POST['titre']);
+        $image = htmlspecialchars($_POST['image']);
+        $contenu = nl2br($_POST['contenu']);
+        $categorie = $_POST['categorie'];
+        create_post($_SESSION['id'], $titre, $contenu, $image, $categorie);
+        header('location:index.php');
     }
     else
     {
-        $error = 'Veuillez compléter le titre du post';
+        $error = 'Veuillez compléter tous les champs';
     }
 }
+
 
 ?>
 
@@ -86,7 +74,7 @@ if (isset($_POST['sendPost']))
 <nav class="navbar navbar-expand-lg navbar-dark elegant-color">
 
   <!-- Navbar brand -->
-  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyPenguy</a>
+  <a class="navbar-brand" href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRvu70-oIYJSrEyR7HO64_TmcTr26UhsHB34a2GWZGERfKT2L" class="mr-2" width="30px;" alt=""> BloggyHarinck</a>
 
   <!-- Collapse button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
@@ -112,8 +100,13 @@ if (isset($_POST['sendPost']))
         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">Catégories</a>
         <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="index.php?cat=1">TECH</a>
-          <a class="dropdown-item" href="index.php?cat=2">MOBILE</a>
+        <a class="dropdown-item" href="index.php">Toutes les catégories</a>
+            <?php
+            $categories = get_all_categories();
+            foreach($categories as $categorie):
+            ?>
+            <a class="dropdown-item" href="index.php?cat=<?= $categorie['id'] ?>"><?= $categorie['name'] ?></a>
+            <?php endforeach; ?>
         </div>
       </li>
 
@@ -150,11 +143,25 @@ if (isset($_SESSION['id'])) {
 <!--/.Navbar-->
 
 
+
+
+
+
+
+
+
+
+
+
 <form action="" method="POST">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
+<div class="container">
+
+    <h1 class="mt-5">Bonjour <?= $_SESSION['pseudo'] ?>, rédigez votre article</h1>
+
+    <div class="col-md-12">
+
+
             <?php
             if (isset($error))
             {
@@ -164,35 +171,75 @@ if (isset($_SESSION['id'])) {
                 </div>
                 <?php
             }
+            ?>
 
-?>
-            <h1 class="mt-5">Ajouter un article</h1>
 
-            <!-- Material input -->
-            <div class="md-form">
-            <input type="text" id="form1" name="title" class="form-control">
-            <label for="form1">Votre titre</label>
+        <div class="row">
+            <div class="col-md-9">
+                <!-- Material input -->
+                <div class="md-form">
+                <input type="text" id="titre" name="titre" maxlength="100" class="form-control" style="font-size:20px;">
+                <label style="font-size:20px;" for="titre">Titre de votre article</label>
+                </div>
             </div>
-
-            <!-- Material input -->
-            <div class="md-form">
-            <input type="text" id="form1" name="image" class="form-control">
-            <label for="form1">Votre image</label>
-            </div>
-
-            <!--Material textarea-->
-            <div class="md-form">
-                <textarea id="form7" class="md-textarea form-control" name="content" rows="10" placeholder="Ajouter le contenu de votre article"></textarea>
-                <label for="form7">Votre post</label>
-            </div>
-
-            <input class="btn btn-elegant mb-5" type="submit" id="sendPost" name="sendPost" value="Ajouter ce post">
-
+            <div class="col-md-3 pt-4">
+                <select id="categorie" name="categorie" class="browser-default custom-select">
+                    <?php
+                        foreach (get_all_categories() as $categorie):
+                    ?>
+                        <option value="<?= get_categorie_id_by_name($categorie['name']) ?>"><?= $categorie['name'] ?></option>
+                    <?php
+                        endforeach;
+                    ?>
+                </select>
             </div>
         </div>
+
+
+        <div class="row">
+            <div class="col-md-9">
+                <!-- Material input -->
+                <div class="md-form">
+                <input style="font-size:18px;" type="text" id="image" name="image" class="form-control">
+                <label style="font-size:18px;" for="image">URL de votre image</label>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <img id="apercu" src="" width="100%" alt="">
+            </div>
+        </div>
+
+
+        <!--Material textarea-->
+        <div class="md-form">
+        <textarea style="font-size:18px;" id="contenu" name="contenu" class="md-textarea form-control" rows="10"></textarea>
+        <label style="font-size:18px;" for="contenu">Contenu de votre article</label>
+        </div>
+
+        <input type="submit" id="submitPost" name="submitPost" class="btn btn-success" value="Créer l'article">
+
     </div>
+</div>
 
 </form>
+
+<script>
+document.getElementById('titre').addEventListener('keyup', function() {
+document.getElementById('submitPost').value = 'Créer l\'article ' + this.value;
+});
+document.getElementById('image').addEventListener('keyup', function() {
+document.getElementById('apercu').src = this.value;
+});
+</script>
+
+
+
+
+
+
+
+
+
 
 
 
