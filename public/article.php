@@ -13,6 +13,14 @@ else
     header('location:index.php');
 }
 
+if (isset($_POST['commentaire']))
+{
+    $commentaire = htmlspecialchars($_POST['commentaire']);
+
+    add_comment($getid, $_SESSION['id'], $commentaire);
+
+    header('location:article.php?id='.$getid.'#commentaires');
+}
 
 if (isset($_POST['login'])) {
     if (!empty($_POST['mail']) && !empty($_POST['password'])) {
@@ -74,7 +82,6 @@ if (isset($_POST['login'])) {
 <body>
 
 
-
 <!-- MODALE CONNEXION -->
 
 
@@ -114,10 +121,6 @@ if (isset($_POST['login'])) {
 </div>
 
 </form>
-
-
-
-
 
 
 
@@ -245,11 +248,11 @@ if (isset($_POST['login'])) {
                         <a target="_blank" href="mailto:noah.chtl@gmail.com"><img class="mt-3" style="border-radius:10%;margin-left:2px;" src="http://lcdgg.thomascyrix.com/wp-content/uploads/2019/04/Gmail_Icon.png" width="35px" alt=""></a>
         
                     </div>
-                    <div class="col-md-11">
+                    <div class="col-md-11 mt-3">
                         <p style="font-size:19px;">
                             <?= $post['content'] ?>
                         </p>
-                    
+
                     </div>
                 </div>
             
@@ -265,11 +268,6 @@ if (isset($_POST['login'])) {
                 
                 ?>
             </div>
-
-
-
-
-
 
 
                 <div class="col-md-4" style="margin-top:-80px;">
@@ -323,12 +321,81 @@ if (isset($_POST['login'])) {
 
 
 
+            <h2 class="mt-4" id="commentaires">Commentaires</h2>
+            <hr>
+
+            <?php
+            $coms = get_com_by_id($getid);
+            $nbCom = $coms->rowcount();
+            if ($nbCom == 0)
+            {
+                echo '<br>Il n\'y a aucun commentaire ! Soyez le premier à poster un commentaire sur cet article';
+            }
+            else
+            {
+                ?>
+                    <?php
+                    foreach($coms as $com):
+                        $cuser = retrieve_user($com['id_user']);
+                        ?>
+                        <div class="row pt-3">
+                            <div class="col-md-1 mb-5">
+                                <a href="profil.php?id=<?= $cuser['id'] ?>">
+                                    <img src="<?= $cuser['image'] ?>" width="75px" alt="">
+                                </a>
+                            </div>
+                            <div class="col-md-11" style="margin-top:-5px;">
+                                <b><b><a style="color:black;" href="profil.php?id=<?= $cuser['id'] ?>"><?= ucfirst($cuser['pseudo']) ?></a></b></b> à commenté le <?= date('d/m/Y à H:i', $com['date']) ?>
+                                <p class="mt-1">
+                                    <?= $com['content'] ?>
+                                </p>
+                            </div>
+                        </div>
+               
+
+                    <?php
+                    endforeach;
+            }
+            ?>
+
+
+            <h3 class="mt-5">Ajouter un commentaire</h3>
+            <hr>
+            
+            <?php
+            if (isset($_SESSION['id']))
+            {
+                ?>
+                    <form action="" method="POST">
+                        
+                        <!--Material textarea-->
+                        <div class="md-form">
+                            <textarea style="font-size:18px;" id="commentaire" name="commentaire" class="md-textarea form-control" rows="5"></textarea>
+                            <label style="font-size:18px;" for="commentaire">Ajouter un commentaire sous le pseudo de <?= $_SESSION['pseudo'] ?></label>
+                        </div>
+        
+                        <input type="submit" id="submitCommentaire" name="submitCommentaire" class="btn btn-success" value="Envoyer le commentaire">
+        
+                    </form>
+                <?php
+            }
+            else
+            {
+                ?>
+                
+
+                Vous devez
+                <a class="text-primary" data-toggle="modal" data-target="#modalLoginForm"><b>vous connecter</b></a>
+                pour écrire un commentaire à propos de l'article : 
+                <br>
+                <i><?= $a['titre'] ?></i>
+                <?php
+            }
+            ?>
+            
 
         </div>
     </div>
-
-
-
 
 
         <script>
@@ -377,9 +444,6 @@ aria-hidden="true">
 <!-- Central Modal Medium Danger-->
 
 
-
-
-
 <!-- Footer -->
 <footer class="page-footer font-small elegant-color mt-5 pt-2">
 
@@ -391,11 +455,6 @@ aria-hidden="true">
 
 </footer>
 <!-- Footer -->
-
-
-
-
-
 
 
     <!-- /FIN DU PROJET-->

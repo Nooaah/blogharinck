@@ -250,7 +250,7 @@ else
 
             <div class="col-md-8">
                     <p style="font-size:19px;" class="mt-2">
-                        <div class="date" style="font-size:13px;"><b><b><?= retrieve_categorie_by_id($post['categorie']) ?> / </b></b>Le <?= date('d/m/Y à H:m', $post['date']); ?></div>
+                        <div class="date" style="font-size:13px;"><b><b><?= retrieve_categorie_by_id($post['categorie']) ?> / </b></b>Le <?= date('d/m/Y à H:i', $post['date']); ?></div>
                         <h2 class="mb-3"><a style="color:black;" href="article.php?id=<?= $post['id'] ?>"><b><b><?= $post['title'] ?></b></b></a></h2>
                         <?php
                         $text = $post['content'];

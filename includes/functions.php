@@ -66,6 +66,20 @@ function get_new_posts()
     $getNewPosts->execute();
     return $getNewPosts->fetchAll();
 }
+//CRUD commentaires
+function get_com_by_id($id)
+{
+    global $db;
+    $sth = $db->prepare("SELECT * FROM commentaires where id_post = ?");
+    $sth->execute(array($id));
+    return $sth;
+}
+function add_comment($id, $id_user, $content)
+{
+    global $db;
+    $sth = $db->prepare("INSERT INTO commentaires(id_user, id_post, content, date) VALUES(?,?,?,?)");;
+    $sth->execute(array($id_user, $id, $content, time()));
+}
 //CRUD categories
 function get_all_categories()
 {
