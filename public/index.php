@@ -4,6 +4,8 @@ require_once '../includes/config.php';
 
 $posts = get_all_posts();
 
+//create_post();
+
 ?>
 
 <!DOCTYPE html>
