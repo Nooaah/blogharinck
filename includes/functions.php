@@ -7,11 +7,11 @@ function get_all_posts()
     return $sth->fetchAll();
 }
 //CRUD posts
-function create_post($title, $content)
+function create_post($id_user, $title, $content, $image)
 {
     global $db;
-    $ins = $db->prepare('INSERT INTO posts(title, content) VALUES(?, ?)');
-    $ins->execute(array($title, $content));
+    $ins = $db->prepare('INSERT INTO posts(id_user, title, content, image) VALUES(?, ?, ?, ?)');
+    $ins->execute(array($id_user, $title, $content, $image));
 }
 function retrieve_post($id)
 {
@@ -32,6 +32,20 @@ function delete_post($id)
     $del = $db->prepare('DELETE FROM posts WHERE id = ?');
     $del->execute(array($id));
 }
+function get_post_by_categorie($cat)
+{
+    global $db;
+    $getByCat = $db->prepare('SELECT * FROM posts WHERE categorie = ?');
+    $getByCat->execute(array($cat));
+    return $getByCat->fetchAll();
+}
+function get_posts_by_user($id)
+{
+    global $db;
+    $getByCat = $db->prepare('SELECT * FROM posts WHERE id_user = ?');
+    $getByCat->execute(array($id));
+    return $getByCat->fetchAll();
+}
 
 //CRUD categories
 function get_categorie_id_by_name($name)
@@ -41,6 +55,14 @@ function get_categorie_id_by_name($name)
     $ins->execute(array($name));
     $ins = $ins->fetch();
     return $ins['id']; 
+}
+function retrieve_categorie_by_id($id)
+{
+    global $db;
+    $ins = $db->prepare('SELECT * FROM categories WHERE id = ?');
+    $ins->execute(array($id));
+    $ins = $ins->fetch();
+    return $ins['name']; 
 }
 function create_categorie($name)
 {
@@ -70,6 +92,13 @@ function delete_categorie($id)
 
 
 //CRUD users
+function get_user_pseudo_by_id($id)
+{
+    global $db;
+    $getUserById = $db->prepare('SELECT * FROM users WHERE id = ?');
+    $getUserById->execute(array($id));
+    return $getUserById->fetch();
+}
 function get_user_by_mail_and_password($mail, $password)
 {
     global $db;

@@ -1,4 +1,4 @@
-# blogharinck
+# BloggyHarinck
 
 # TP BLOG
 - public/index.php : le fichier principal de l'application et la home page
