@@ -3,7 +3,7 @@
 function get_all_posts()
 {
     global $db;
-    $sth = $db->query("SELECT * FROM posts");
+    $sth = $db->query("SELECT * FROM posts ORDER BY id DESC");
     return $sth->fetchAll();
 }
 //CRUD posts
