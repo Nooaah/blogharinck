@@ -70,6 +70,14 @@ function delete_categorie($id)
 
 
 //CRUD users
+function get_user_by_mail_and_password($mail, $password)
+{
+    global $db;
+    $password = sha1($password);
+    $get = $db->prepare('SELECT * FROM users WHERE mail = ? AND password = ?');
+    $get->execute(array($mail, $password));
+    return $get;
+}
 function create_user($pseudo, $mail, $password)
 {
     global $db;
