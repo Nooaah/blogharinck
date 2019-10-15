@@ -35,7 +35,7 @@ function delete_post($id)
 function get_post_by_categorie($cat)
 {
     global $db;
-    $getByCat = $db->prepare('SELECT * FROM posts WHERE categorie = ?');
+    $getByCat = $db->prepare('SELECT * FROM posts WHERE categorie = ? ORDER BY id');
     $getByCat->execute(array($cat));
     return $getByCat->fetchAll();
 }
@@ -146,11 +146,11 @@ function get_user_by_mail_and_password($mail, $password)
     $get->execute(array($mail, $password));
     return $get;
 }
-function create_user($pseudo, $mail, $password)
+function create_user($pseudo, $mail, $password, $image)
 {
     global $db;
-    $ins = $db->prepare('INSERT INTO users(pseudo, mail, password) VALUES(?, ?, ?)');
-    $ins->execute(array($pseudo, $mail, $password));
+    $ins = $db->prepare('INSERT INTO users(pseudo, mail, password, image) VALUES(?, ?, ?, ?)');
+    $ins->execute(array($pseudo, $mail, $password, $image));
 }
 function retrieve_user($id)
 {

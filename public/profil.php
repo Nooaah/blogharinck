@@ -100,6 +100,9 @@ else
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#modalLoginForm"><i class="far fa-laugh-wink"></i> Connexion</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" data-target="#modalRegisterForm"><i class="fas fa-user-astronaut"></i> Inscription</a>
+                </li>
             <?php
         }
         else
