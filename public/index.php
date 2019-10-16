@@ -25,7 +25,7 @@ if (isset($_POST['pseudoRegister']) && isset($_POST['emailRegister']) && isset($
     $requser = get_user_by_mail_and_password($email, $mdp);
 
     $nbUsers = $requser->rowcount();
-    echo $nbUsers;
+    
     if ($nbUsers == 1) {
         $requser = $requser->fetch();
         $_SESSION['id'] = $requser['id'];
